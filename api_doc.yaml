@@ -1,0 +1,285 @@
+openapi: "3.0.2"
+info:
+  title: iMariners app
+  version: "0.1.0"
+servers:
+  - url: https://api.server.test/v1
+
+tags:
+  - name: "Authentication"
+
+paths:
+  # User login
+  /auth/login:
+    get:
+      tags:
+        - "Authentication"
+      summary: User login.
+      description: To login as a user use this method
+      parameters:
+        - in: query
+          name: email
+          schema:
+            type: string
+          required: true
+          description: User email
+        - in: query
+          name: loginTime
+          schema:
+            type: string
+          required: true
+          description: User Login time
+        - in: query
+          name: password
+          schema:
+            type: string
+          required: true
+          description: The encripted password
+
+      responses:
+        "200": # status code
+          description: A JSON array of user credentials
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  # Register user
+  /auth/register:
+    post:
+      tags:
+        - "Authentication"
+      summary: User register.
+      description: Returns user credentials.
+      requestBody:
+        description: The following all paramiters are required*
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: The user's user name.
+                mobilenum:
+                  type: number
+                  description: The user's phone number.
+                  example: +91 87796 08516
+                email:
+                  type: string
+                  description: The user login email.
+                password:
+                  type: string
+                  description: The encripted password.
+                  example: wsdef453fgg5gyhgg!22#drffff
+      responses:
+        "201": # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/User"
+
+  #add category
+  /category:
+    post:
+      tags:
+        - "Category"
+      summary: Add category
+      description: Add category of knowage base.
+      requestBody:
+        description: The following all paramiters are required*
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryAdd"
+      responses:
+        "201": # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoryView"
+    get:
+      tags:
+        - "Category"
+      summary: Get all categories
+      description: Get all categories of knowage base.
+      parameters:
+        - in: query
+          name: page
+          schema:
+            type: integer
+          required: false
+          description: Pagination page number
+        - in: query
+          name: limit
+          schema:
+            type: integer
+          required: false
+          description: Pagination limit as numbers
+        - in: query
+          name: query
+          schema:
+            type: string
+          required: false
+          description: query to search categories by name
+      responses:
+        "200": # status code
+          description: A JSON array of categories
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  totalItems:
+                    type: number
+                    description: Total number of categories
+                    example: 1
+                  categories:
+                    type: array
+                    description: Array of categories
+                    items:
+                      $ref: "#/components/schemas/CategoryView"
+
+  #add category content
+  /category/content:
+    post:
+      tags:
+        - "Category"
+      summary: Add category
+      description: Add category of knowage base.
+      requestBody:
+        description: Parameters to add categories to request
+        content:
+          multipart/from-data:
+            schema:
+              type: object
+              properties:
+                categoryId:
+                  type: string
+                  description: The category Id.
+                pdfFile:
+                  type: string
+                  format: binary
+                  description: PDF file of the content.
+      responses:
+        "201": # status code
+          description: A JSON array of user names
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoryView"
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        uid:
+          type: integer
+          description: The user ID.
+        email:
+          type: string
+          description: User name.
+        subscriptionStatus:
+          type: string
+          description: Subscription ststus of the user enum(free/pro)
+          example: pro
+        firstname:
+          type: string
+          description: The user's first name.
+        lastname:
+          type: string
+          description: The user's last name.
+        lastLogin:
+          type: string
+          description: The user's last login time.
+
+    CategoryAdd:
+      type: object
+      properties:
+        categoryName:
+          type: string
+          description: Name of the category.
+        hasSubCategories:
+          type: boolean
+          description: Sub category status of the categoty
+          example: true
+        subCategories:
+          type: array
+          description: Sub categories of the category
+          items:
+            type: object
+            properties:
+              name:
+                type: string
+                description: name of the category
+              hasSubCategories:
+                type: boolean
+                description: Sub category status of the categoty
+                example: true
+              subCategories:
+                type: array
+                description: Sub categories of the category
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: name of the category
+
+    CategoryView:
+      type: object
+      properties:
+        categoryId:
+          type: string
+          description: Id of the category
+        categoryName:
+          type: string
+          description: Name of the category.
+        categoryContentLink:
+          type: string
+          description: Link of the category content.
+        categoryLearners:
+          type: number
+          description: Number of learner of the category.
+        hasSubCategories:
+          type: boolean
+          description: Sub category status of the categoty
+          example: true
+        subCategories:
+          type: array
+          description: Sub categories of the category
+          items:
+            type: object
+            properties:
+              subCategoryId:
+                type: string
+                description: Id of the category.
+              subCategoryContentLink:
+                type: string
+                description: Link of the category content.
+              name:
+                type: string
+                description: name of the category
+              hasSubCategories:
+                type: boolean
+                description: Sub category status of the categoty
+                example: true
+              subCategories:
+                type: array
+                description: Sub categories of the category
+                items:
+                  type: object
+                  properties:
+                    superSubCategoryId:
+                      type: string
+                      description: Id of the category.
+                    superSubCategoryContentLink:
+                      type: string
+                      description: Link of the category content.
+                    name:
+                      type: string
+                      description: name of the category

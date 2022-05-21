@@ -20,5 +20,5 @@ app.use((req, res, next) => {
 });
 
 app.listen(PORT,()=>{
-    console.log(`Android sensor listener server listening on port ${PORT}`);
+    console.log(`iMariners server listening on port ${PORT}`);
 });
