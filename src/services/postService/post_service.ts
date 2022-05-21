@@ -1,8 +1,6 @@
-import PostDao from "../../dao/post_dao/post_dao";
-import {PostDocument} from "../../schemaModels/post.model";
-import PostModel from "../../models/postModel";
-import DataModel from "../../models/dataModel";
-import {QueryHelperResult} from "../../interfaces/query_helper_result";
+import PostDao from "../../db/dao/post_dao/post_dao";
+import {PostDocument} from "../../db/schemaModels/post.model";
+import PostModel from "../../db/models/postModel";
 
 export default class PostService {
     constructor(
@@ -12,11 +10,6 @@ export default class PostService {
 
     async addPost(post: PostModel): Promise<PostDocument> {
         return this.postDAO.add(post);
-    }
-
-    async getPosts(filterData: DataModel,
-    ): Promise<QueryHelperResult<any>> {
-        return this.postDAO.getAllPosts(filterData);
     }
 
     async updatePost(id: string, post: PostModel): Promise<PostDocument[]> {

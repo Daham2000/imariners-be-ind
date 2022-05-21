@@ -1,5 +1,5 @@
-import {ErrorResponse} from "../errors/errorResponce";
-import {SystemError} from "../errors/systemError";
+import {ErrorResponse} from "./errors/errorResponce";
+import {SystemError} from "./errors/systemError";
 
 const ID_EXISTS = "ID already exist.";
 const VALIDATION_FAILED = "Validation failed";

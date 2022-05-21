@@ -1,9 +1,9 @@
 import {Request, Response} from "express";
 import Joi = require("joi");
-import PostModel from "../../models/postModel";
+import PostModel from "../../db/models/postModel";
 import ServiceLocator from "../../utill/serviceLocator";
 import {errorResponse} from "../../utill/response";
-import DataModel from "../../models/dataModel";
+import DataModel from "../../db/models/dataModel";
 import {QueryHelperResult} from "../../interfaces/query_helper_result";
 
 export default class PostHandler {

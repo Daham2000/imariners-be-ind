@@ -1,5 +1,5 @@
 import {Model} from "mongoose";
-import DBConnection from "../utill/database";
+import DBConnection from "../../utill/database";
 
 export default abstract class Dao {
     protected mongoDB = DBConnection.connect();

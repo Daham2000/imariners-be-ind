@@ -1,6 +1,6 @@
 import * as mongoose from 'mongoose';
 import PostModel from "../models/postModel";
-import DbUtil from "../utill/dbUtil";
+import DbUtil from "../../utill/dbUtil";
 import {Document} from "mongoose";
 
 export interface PostDocument extends PostModel, Document {
