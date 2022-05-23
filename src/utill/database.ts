@@ -1,26 +1,24 @@
-import Mongoose = require("mongoose");
+import mysql = require("mysql");
+import {Connection} from "mysql";
 
 export default class DBConnection {
-    private static db: Mongoose.Connection;
 
-    static async connect(): Promise<Mongoose.Connection> {
-        if (this.db !== undefined) return this.db;
-
-        await Mongoose.connect(process.env.DB_CONNECTION_CLOUD, {
-            useNewUrlParser: true,
-            useFindAndModify: true,
-            useUnifiedTopology: true,
-            useCreateIndex: true,
+    static async connect(): Promise<Connection> {
+        const db = mysql.createConnection({
+            host: "database-1.cxyzvpyv6wa8.us-west-2.rds.amazonaws.com",
+            port: 3306,
+            user: "admin",
+            password: "1234$#!qwerQ",
+            database: "my_db12"
         });
-        this.db = Mongoose.connection;
-
-        this.db.once("open", async () => {
-            console.log("Connected to database");
+        db.connect((err) => {
+            if (err) {
+                console.log(err.message);
+                return;
+            }
+            console.log("Database connected.")
         });
-        this.db.on("error", () => {
-            console.log("Error connecting to database");
-        });
-        return this.db;
+        return db;
     }
 
 }

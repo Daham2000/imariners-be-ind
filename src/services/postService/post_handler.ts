@@ -3,8 +3,6 @@ import Joi = require("joi");
 import PostModel from "../../db/models/postModel";
 import ServiceLocator from "../../utill/serviceLocator";
 import {errorResponse} from "../../utill/response";
-import DataModel from "../../db/models/dataModel";
-import {QueryHelperResult} from "../../interfaces/query_helper_result";
 
 export default class PostHandler {
 
@@ -23,7 +21,7 @@ export default class PostHandler {
         const body: PostModel = validation.value;
         const service = ServiceLocator.addPostService;
         try {
-            await service.addPost(body);
+            // await service.addPost(body);
             res.status(201).send({success: true});
         } catch (err) {
             const errorRes = errorResponse(err);
@@ -65,7 +63,7 @@ export default class PostHandler {
         const postId = idValidation.value.id;
         const service = ServiceLocator.updatePostService;
         try {
-            await service.updatePost(postId, req.body);
+            // await service.updatePost(postId, req.body);
             res.status(201).send({success: true});
         } catch (err) {
             const errorRes = errorResponse(err);
@@ -87,7 +85,7 @@ export default class PostHandler {
         const validatedPostId = idValidation.value.id;
         const service = ServiceLocator.updatePostService;
         try {
-            await service.deletePost(validatedPostId);
+            // await service.deletePost(validatedPostId);
             res.status(201).send({success: true});
         } catch (err) {
             const errorRes = errorResponse(err);

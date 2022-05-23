@@ -1,5 +1,5 @@
-import AddPostService from "../services/postService/post_service";
-import PostDao from "../db/dao/post_dao/post_dao";
+import AddPostService from "../services/postService/user_service";
+import PostDao from "../db/dao/post_dao/user_dao";
 
 export default class ServiceLocator {
 
