@@ -1,6 +1,4 @@
 import PostDao from "../../db/dao/post_dao/user_dao";
-import {PostDocument} from "../../db/schemaModels/post.model";
-import PostModel from "../../db/models/postModel";
 import UserModel from "../../db/models/userModel";
 
 export default class UserService {
@@ -9,15 +7,17 @@ export default class UserService {
     ) {
     }
 
-    async registerUser(user: UserModel): Promise<PostDocument> {
-        return this.postDAO.registerUser(user);
+    async registerUser(user: UserModel): Promise<any> {
+        user.uid = "U0002";
+        user.loggedIn = false;
+        user.deviceId = "none";
+        user.subscriptionStatus = "free";
+        user.lastLogin = "none";
+        try {
+            return this.postDAO.registerUser(user);
+        } catch (e) {
+            console.log(e);
+        }
     }
-    //
-    // async updatePost(id: string, post: PostModel): Promise<PostDocument[]> {
-    //     return this.postDAO.updatePost(id, post);
-    // }
-    //
-    // async deletePost(id: string): Promise<PostDocument[]> {
-    //     return this.postDAO.deletePost(id);
-    // }
+
 }

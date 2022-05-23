@@ -3,6 +3,7 @@ import DBConnection from "../../utill/database";
 export default abstract class Dao {
 
     async add(sql: string): Promise<any> {
+        console.log(sql)
         const mysqlDB = await DBConnection.connect();
         mysqlDB.query(sql, function (err, result) {
             if (err) throw err;

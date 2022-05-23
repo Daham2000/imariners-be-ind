@@ -1,8 +1,8 @@
 import {Router} from "express";
-import postRoute from "../post_routes/post_route";
+import postRoute from "../post_routes/user_route";
 
 const generalRouter = Router();
 
-generalRouter.use("/posts", postRoute);
+generalRouter.use("/auth", postRoute);
 
 export default generalRouter;

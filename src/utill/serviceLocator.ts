@@ -1,5 +1,6 @@
 import AddPostService from "../services/postService/user_service";
 import PostDao from "../db/dao/post_dao/user_dao";
+import UserService from "../services/postService/user_service";
 
 export default class ServiceLocator {
 
@@ -13,49 +14,15 @@ export default class ServiceLocator {
         return this.instances.get(key);
     }
 
-    static get addPostService(): AddPostService {
-        const key = "add_post_service";
+    static get registerUser(): UserService {
+        const key = "register_user_service";
         if (!this.instances.get(key)) {
             this.instances.set(
                 key,
-                new AddPostService(this.postDao)
+                new UserService(this.postDao)
             );
         }
         return this.instances.get(key);
     }
-
-    static get getPostsService(): AddPostService {
-        const key = "get_posts_service";
-        if (!this.instances.get(key)) {
-            this.instances.set(
-                key,
-                new AddPostService(this.postDao)
-            );
-        }
-        return this.instances.get(key);
-    }
-
-    static get updatePostService(): AddPostService {
-        const key = "update_post_service";
-        if (!this.instances.get(key)) {
-            this.instances.set(
-                key,
-                new AddPostService(this.postDao)
-            );
-        }
-        return this.instances.get(key);
-    }
-
-    static get deletePostService(): AddPostService {
-        const key = "delete_post_service";
-        if (!this.instances.get(key)) {
-            this.instances.set(
-                key,
-                new AddPostService(this.postDao)
-            );
-        }
-        return this.instances.get(key);
-    }
-
 
 }
