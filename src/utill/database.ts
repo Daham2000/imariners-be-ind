@@ -16,7 +16,6 @@ export default class DBConnection {
                 console.log(err.message);
                 return;
             }
-            console.log("Database connected.")
         });
         return db;
     }
