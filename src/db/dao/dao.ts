@@ -1,9 +1,9 @@
-import DBConnection from "../../utill/database";
+import {getConnection} from "../../utill/database";
 
 export default abstract class Dao {
 
     async query(sql: string): Promise<any> {
-        const mysqlDB = await DBConnection.connect();
+        const mysqlDB = getConnection();
         let res;
         await new Promise((resolve, reject) => {
             mysqlDB.query(sql, function (err, result) {

@@ -20,7 +20,6 @@ export default class UserDao extends Dao {
         `);
             return super.query(`SELECT * from Users where uid="${user.uid}"`);
         }
-
     }
 
     async loginUser(user: UserModel): Promise<any> {

@@ -2,7 +2,7 @@ import express from "express";
 import cors from "cors";
 import apiRouter from "./routes/api_router/api_router";
 import * as dotenv from "dotenv";
-import DBConnection from "./utill/database";
+import {init} from "./utill/database";
 
 const app = express();
 
@@ -22,5 +22,6 @@ app.use((req, res, next) => {
 });
 
 app.listen(PORT, () => {
+    init();
     console.log(`iMariners server listening on port ${PORT}`);
 });
