@@ -14,7 +14,7 @@ export default class ServiceLocator {
         return this.instances.get(key);
     }
 
-    static get registerUser(): UserService {
+    static get userService(): UserService {
         const key = "register_user_service";
         if (!this.instances.get(key)) {
             this.instances.set(

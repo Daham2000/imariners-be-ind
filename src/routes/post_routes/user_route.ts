@@ -5,11 +5,6 @@ import UserHandler from "../../services/postService/user_handler";
 const postRoute = Router();
 
 postRoute.route("/register").post(UserHandler.registerUser);
-//
-// postRoute.route("/").get(PostHandler.getAllPosts);
-
-// postRoute.route("/:id").patch(PostHandler.updatePost);
-//
-// postRoute.route("/:id").delete(PostHandler.deletePost);
+postRoute.route("/login").get(UserHandler.loginUser);
 
 export default postRoute;

@@ -18,13 +18,37 @@ export default class UserHandler {
             return;
         }
         const body: UserModel = validation.value;
-        const service = ServiceLocator.registerUser;
+        const service = ServiceLocator.userService;
         try {
-            await service.registerUser(body);
-            res.status(201).send({success: true});
+            const resp = await service.registerUser(body);
+            res.status(201).send(resp);
+        } catch (err) {
+            console.log(err)
+            const errorRes = errorResponse(err);
+            res.status(errorRes.code).send(errorRes);
+        }
+    }
+
+    public static async loginUser(req: Request, res: Response): Promise<void> {
+        const schema = Joi.object({
+            email : Joi.string().required(),
+            deviceId: Joi.string().required(),
+            lastLogin: Joi.string().required(),
+            password: Joi.string().required()
+        });
+        const validation = schema.validate(req.query);
+        if (validation.error) {
+            res.status(401).send(validation.error);
+            return;
+        }
+        const body: UserModel = validation.value;
+        const service = ServiceLocator.userService;
+        try {
+            const resp = await service.loginUser(body);
+            res.status(201).send(resp);
         } catch (err) {
             const errorRes = errorResponse(err);
-            res.status(errorRes.code).send(errorRes.message);
+            res.status(errorRes.code).send(errorRes);
         }
     }
 
