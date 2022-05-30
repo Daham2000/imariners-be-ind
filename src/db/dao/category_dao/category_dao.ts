@@ -13,9 +13,10 @@ export default class CategoryDAO extends Dao {
         ${category.hasSubCategories},
         ${category.categoryLearners})
         `);
-        for (let i = 0; i < category.subCategories.length; i++) {
-            category.subCategories[i].subCategoryId = `${uniqid()}`;
-            await super.query(`INSERT INTO SubCategories (
+        if (category.hasSubCategories == true) {
+            for (let i = 0; i < category.subCategories.length; i++) {
+                category.subCategories[i].subCategoryId = `${uniqid()}`;
+                await super.query(`INSERT INTO SubCategories (
         c_id, s_c_id,categoryName,content_links,hasSubCategories) VALUES (
         "${category.categoryId}",
         "${category.subCategories[i].subCategoryId}",
@@ -24,19 +25,24 @@ export default class CategoryDAO extends Dao {
         "${category.subCategories[i].hasSubCategories}")
         `);
 
-            for (let ii = 0; ii < category.subCategories[i].subCategories.length; ii++) {
-                {
-                    category.subCategories[i].subCategories[ii].superSubCategoryId = `${uniqid()}`;
-                    await super.query(`INSERT INTO SuperSubCategories (
+                if (category.subCategories[i].hasSubCategories == true) {
+                    for (let ii = 0; ii < category.subCategories[i].subCategories.length; ii++) {
+                        {
+                            category.subCategories[i].subCategories[ii].superSubCategoryId = `${uniqid()}`;
+                            await super.query(`INSERT INTO SuperSubCategories (
                     ss_c_id, s_c_id,categoryName,content_links) VALUES (
                     "${category.subCategories[i].subCategories[ii].superSubCategoryId}",
                     "${category.subCategories[i].subCategoryId}",
                     "${category.subCategories[i].subCategories[ii].name}",
                                    '{"links":[]}')
                     `);
+                        }
+                    }
                 }
+
             }
         }
+
         return super.query(`SELECT * from Categories where c_id="${category.categoryId}" `);
     }
 
@@ -45,9 +51,12 @@ export default class CategoryDAO extends Dao {
     }
 
     async getAllCategories(dataModel: DataModel): Promise<any> {
-        let skip = (dataModel.page-1) * dataModel.limit;
+        let skip = (dataModel.page - 1) * dataModel.limit;
         let limit = skip + ',' + dataModel.limit;
-        return super.query(`SELECT * from Categories limit ${limit}`);
+        if (dataModel.query == undefined) {
+            return super.query(`SELECT * from Categories limit ${limit}`);
+        }
+        return super.query(`SELECT * from Categories Where categoryName LIKE "%${dataModel.query}%" limit ${limit}`);
     }
 
     async getSubCategories(categoryId: string): Promise<any> {

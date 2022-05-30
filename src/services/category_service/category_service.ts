@@ -62,10 +62,10 @@ export default class CategoryService {
         }
     }
 
-    async getCategories(dataModel: DataModel){
+    async getCategories(dataModel: DataModel) {
         const categories = await this.categoryDAO.getAllCategories(dataModel);
         let ca = [];
-        for(let index=0; index<categories.length; index++){
+        for (let index = 0; index < categories.length; index++) {
             let content_links = [];
             let stringObj = JSON.parse(categories[index].content_links);
             for (let i = 0; i < stringObj.links.length; i++) {
