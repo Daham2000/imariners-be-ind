@@ -1,8 +1,11 @@
 import {Category} from "../../db/models/category";
 import CategoryDAO from "../../db/dao/category_dao/category_dao";
 import DataModel from "../../db/models/dataModel";
+import CategoryContentModel from "../../db/models/categoryContentModel";
+import {S3} from "aws-sdk";
 
 const uniqid = require('uniqid');
+const fs = require('fs');
 
 export default class CategoryService {
 
@@ -23,6 +26,24 @@ export default class CategoryService {
             content_links.push(stringObj.links[i]);
         }
         let subCategories = await this.getSubCategories(category.categoryId);
+        return {
+            "categoryId": t[0].c_id,
+            "categoryName": t[0].categoryName,
+            "categoryLearners": t[0].categoryLearners,
+            "hasSubCategories": t[0].hasSubCategories == 1,
+            "categoryContentLink": content_links,
+            "subCategories": subCategories
+        }
+    }
+
+    async getSingleCategory(categoryId: string): Promise<any> {
+        const t = await this.categoryDAO.getSingleCategory(categoryId);
+        let content_links = [];
+        let stringObj = JSON.parse(t[0].content_links);
+        for (let i = 0; i < stringObj.links.length; i++) {
+            content_links.push(stringObj.links[i]);
+        }
+        let subCategories = await this.getSubCategories(categoryId);
         return {
             "categoryId": t[0].c_id,
             "categoryName": t[0].categoryName,
@@ -59,8 +80,34 @@ export default class CategoryService {
         }
     }
 
-    async uploadContent() {
+    async uploadContent(categoryContentModel: CategoryContentModel, file: any,
+    ) {
+        const accessKeyId = process.env.AWS_ACCESS_KEY;
+        const secretAccessKey = process.env.AWS_SECRET_KEY;
+        const bucketName = "contents-1";
 
+        const s3 = new S3({
+            accessKeyId,
+            secretAccessKey
+        });
+        const fileContent = fs.createReadStream(file.path);
+        const params = {
+            Bucket: bucketName,
+            Key: file.originalname,
+            Body: fileContent
+        };
+
+        if (file != undefined) {
+            const res = await s3.upload(params).promise();
+            if (categoryContentModel.categoryId != undefined) {
+                await this.categoryDAO.updateCategoryLinks(categoryContentModel.categoryId, res.Location);
+            } else if (categoryContentModel.subCategory != undefined) {
+                await this.categoryDAO.updateSubCategoryLinks(categoryContentModel.categoryId, res.Location);
+            } else if (categoryContentModel.superSubCategory != undefined) {
+                await this.categoryDAO.updateSuperSubCategoryLinks(categoryContentModel.categoryId, res.Location);
+            }
+            return res;
+        }
     }
 
     async getSubCategories(categoryId: string) {

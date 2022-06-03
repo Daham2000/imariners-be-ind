@@ -67,4 +67,31 @@ export default class CategoryDAO extends Dao {
         return super.query(`SELECT * from SuperSubCategories where s_c_id="${categoryId}" `);
     }
 
+    async updateCategoryLinks(categoryId: string, link: string) {
+        const r = await super.query(`SELECT content_links from Categories where c_id="${categoryId}" `);
+        let stringObj = JSON.parse(r[0].content_links);
+        let links = stringObj.links;
+        links.push(link);
+        const json = JSON.stringify(links);
+        await super.query(`Update Categories SET content_links = '{"links":${json}}' `);
+    }
+
+    async updateSubCategoryLinks(categoryId: string, link: string) {
+        const r = await super.query(`SELECT content_links from SubCategories where s_c_id="${categoryId}" `);
+        let stringObj = JSON.parse(r[0].content_links);
+        let links = stringObj.links;
+        links.push(link);
+        const json = JSON.stringify(links);
+        await super.query(`Update SubCategories SET content_links = '{"links":${json}}' `);
+    }
+
+    async updateSuperSubCategoryLinks(categoryId: string, link: string) {
+        const r = await super.query(`SELECT content_links from SuperSubCategories where ss_c_id="${categoryId}" `);
+        let stringObj = JSON.parse(r[0].content_links);
+        let links = stringObj.links;
+        links.push(link);
+        const json = JSON.stringify(links);
+        await super.query(`Update SuperSubCategories SET content_links = '{"links":${json}}' `);
+    }
+
 }
