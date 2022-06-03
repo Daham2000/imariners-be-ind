@@ -6,7 +6,7 @@ export default abstract class Dao {
         const mysqlDB = getConnection();
         let res;
         await new Promise((resolve, reject) => {
-            mysqlDB.query(sql, function (err, result) {
+            mysqlDB.query(sql, (err, result) => {
                 if (err) {
                     if (err) return reject(err);
                 } else {

@@ -6,7 +6,7 @@ export default class UserDao extends Dao {
     async registerUser(user: UserModel): Promise<any> {
         const users = await super.query(`SELECT * from Users where email="${user.email}"`);
         if (users.length > 0) {
-            throw "Duplicated email";
+            throw new Error("Duplicated email");
         } else {
             await super.query(`INSERT INTO Users (uid, email,loggedIn,deviceId,subscriptionStatus,username,lastLogin,password) VALUES (
         "${user.uid}",
