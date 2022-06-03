@@ -1,4 +1,4 @@
-web: node index.ts
+web: node src/index.ts
 
 
 
