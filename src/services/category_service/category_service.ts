@@ -3,9 +3,9 @@ import CategoryDAO from "../../db/dao/category_dao/category_dao";
 import DataModel from "../../db/models/dataModel";
 import CategoryContentModel from "../../db/models/categoryContentModel";
 import {S3} from "aws-sdk";
-import uniqid from 'uniqid';
+
+import uniqid from "uniqid";
 import fs from 'fs';
-// tslint:disable-next-line:prefer-for-of
 
 export default class CategoryService {
 
@@ -19,12 +19,11 @@ export default class CategoryService {
         category.categoryContentLink = [""];
         category.categoryLearners = 0;
         const t = await this.categoryDAO.addCategory(category);
-        const contentLinks = [];
+        const content_links = [];
         const stringObj = JSON.parse(t[0].content_links);
-        // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < stringObj.links.length; i++) {
             console.log(stringObj.links[i])
-            contentLinks.push(stringObj.links[i]);
+            content_links.push(stringObj.links[i]);
         }
         const subCategories = await this.getSubCategories(category.categoryId);
         return {
@@ -32,18 +31,17 @@ export default class CategoryService {
             "categoryName": t[0].categoryName,
             "categoryLearners": t[0].categoryLearners,
             "hasSubCategories": t[0].hasSubCategories === 1,
-            "categoryContentLink": contentLinks,
+            "categoryContentLink": content_links,
             "subCategories": subCategories
         }
     }
 
     async getSingleCategory(categoryId: string): Promise<any> {
         const t = await this.categoryDAO.getSingleCategory(categoryId);
-        const contentLinks = [];
+        const content_links = [];
         const stringObj = JSON.parse(t[0].content_links);
-        // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < stringObj.links.length; i++) {
-            contentLinks.push(stringObj.links[i]);
+            content_links.push(stringObj.links[i]);
         }
         const subCategories = await this.getSubCategories(categoryId);
         return {
@@ -51,7 +49,7 @@ export default class CategoryService {
             "categoryName": t[0].categoryName,
             "categoryLearners": t[0].categoryLearners,
             "hasSubCategories": t[0].hasSubCategories === 1,
-            "categoryContentLink": contentLinks,
+            "categoryContentLink": content_links,
             "subCategories": subCategories
         }
     }
@@ -59,13 +57,11 @@ export default class CategoryService {
     async getCategories(dataModel: DataModel): Promise<any> {
         const categories = await this.categoryDAO.getAllCategories(dataModel);
         const ca = [];
-        // tslint:disable-next-line:prefer-for-of
         for (let index = 0; index < categories.length; index++) {
-            const contentLinks = [];
+            const content_links = [];
             const stringObj = JSON.parse(categories[index].content_links);
-            // tslint:disable-next-line:prefer-for-of
             for (let i = 0; i < stringObj.links.length; i++) {
-                contentLinks.push(stringObj.links[i]);
+                content_links.push(stringObj.links[i]);
             }
             const subCategories = await this.getSubCategories(categories[index].c_id);
             ca.push({
@@ -73,7 +69,7 @@ export default class CategoryService {
                 "categoryName": categories[index].categoryName,
                 "categoryLearners": categories[index].categoryLearners,
                 "hasSubCategories": categories[index].hasSubCategories === 1,
-                "categoryContentLink": contentLinks,
+                "categoryContentLink": content_links,
                 "subCategories": subCategories
             });
         }
@@ -103,11 +99,11 @@ export default class CategoryService {
 
         if (file !== undefined) {
             const res = await s3.upload(params).promise();
-            if (categoryContentModel.categoryId !== undefined) {
+            if (categoryContentModel.categoryId != undefined) {
                 await this.categoryDAO.updateCategoryLinks(categoryContentModel.categoryId, res.Location);
-            } else if (categoryContentModel.subCategory !== undefined) {
+            } else if (categoryContentModel.subCategory != undefined) {
                 await this.categoryDAO.updateSubCategoryLinks(categoryContentModel.categoryId, res.Location);
-            } else if (categoryContentModel.superSubCategory !== undefined) {
+            } else if (categoryContentModel.superSubCategory != undefined) {
                 await this.categoryDAO.updateSuperSubCategoryLinks(categoryContentModel.categoryId, res.Location);
             }
             return res;
@@ -117,33 +113,31 @@ export default class CategoryService {
     async getSubCategories(categoryId: string) {
         const subCategoriesResult = await this.categoryDAO.getSubCategories(categoryId);
         const subCategories = [];
-        // tslint:disable-next-line:prefer-for-of
         for (let i = 0; i < subCategoriesResult.length; i++) {
-            const contentLinksSub = [];
+            const content_links_sub = [];
             const subCategoryLinks = JSON.parse(subCategoriesResult[i].content_links);
-            for (let index = 0; index < subCategoryLinks.length; index++) {
-                contentLinksSub.push(subCategoryLinks.links[index]);
+            for (let i = 0; i < subCategoryLinks.length; i++) {
+                content_links_sub.push(subCategoryLinks.links[i]);
             }
             const superSubCategoriesResult = await this.categoryDAO.getSuperSubCategories(subCategoriesResult[i].s_c_id);
             const superSubCategories = [];
-            // tslint:disable-next-line:prefer-for-of
-            for (let index = 0; index < superSubCategoriesResult.length; index++) {
-                const contentLinkSub = [];
-                const subCategoryLink = JSON.parse(superSubCategoriesResult[index].content_links);
-                for (let indexT = 0; indexT < subCategoryLink.length; indexT++) {
-                    contentLinkSub.push(subCategoryLink.links[indexT]);
+            for (let i = 0; i < superSubCategoriesResult.length; i++) {
+                const content_links_sub = [];
+                const subCategoryLinks = JSON.parse(superSubCategoriesResult[i].content_links);
+                for (let i = 0; i < subCategoryLinks.length; i++) {
+                    content_links_sub.push(subCategoryLinks.links[i]);
                 }
                 superSubCategories.push({
                     "superSubCategoryId": superSubCategoriesResult[i].ss_c_id,
                     "name": superSubCategoriesResult[i].categoryName,
-                    "categoryContentLink": contentLinkSub
+                    "categoryContentLink": content_links_sub
                 });
             }
             subCategories.push({
                 "subCategoryId": subCategoriesResult[i].s_c_id,
                 "name": subCategoriesResult[i].categoryName,
-                "hasSubCategories": subCategoriesResult[i].hasSubCategories === 1,
-                "categoryContentLink": contentLinksSub,
+                "hasSubCategories": subCategoriesResult[i].hasSubCategories == 1,
+                "categoryContentLink": content_links_sub,
                 "subCategories": superSubCategories
             });
         }

@@ -22,6 +22,6 @@ app.use((req, res, next) => {
 });
 
 app.listen(PORT, () => {
-    init();
+    // init();
     console.log(`iMariners server listening on port ${PORT}`);
 });
