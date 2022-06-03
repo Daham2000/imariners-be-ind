@@ -2,7 +2,7 @@ import PostDao from "../../db/dao/user_dao/user_dao";
 import UserModel from "../../db/models/userModel";
 import UserPaymentModel from "../../db/models/userPaymentModel";
 import UserSubsDao from "../../db/dao/user_dao/user_subs_dao";
-const uniqid = require('uniqid');
+import uniqid from 'uniqid';
 
 export default class UserService {
     constructor(
@@ -18,7 +18,7 @@ export default class UserService {
         user.subscriptionStatus = "free";
         user.lastLogin = "none";
         const t = await this.postDAO.registerUser(user);
-        if(t!="Duplicated email"){
+        if(t!=="Duplicated email"){
             return {
                 "uid":t[0].uid,
                 "email":t[0].email,

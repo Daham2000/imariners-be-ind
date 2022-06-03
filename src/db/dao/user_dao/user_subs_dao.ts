@@ -5,7 +5,7 @@ export default class UserSubsDao extends Dao {
     async changeUserSubscription(userSubModel: UserPaymentModel): Promise<any> {
         const users = await super.query(`SELECT * from Users where uid="${userSubModel.uid}"`);
         if (users.length < 0) {
-            throw "Invalid user";
+            throw new Error("Invalid user");
         }
         await super.query(`INSERT INTO UserPayments (uid,payment,paymentCurrency,pay_id,lastPayment) VALUES (
         "${userSubModel.uid}",

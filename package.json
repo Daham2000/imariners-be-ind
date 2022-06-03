@@ -5,14 +5,15 @@
   "main": "dist/index.js",
   "scripts": {
     "prebuild": "tslint -c tslint.json -p tsconfig.json --fix",
-    "start": "node .",
     "build": "tsc",
     "prestart": "npm run build",
+    "start": "node .",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "set NODE_ENV=dev&& nodemon src/index.ts"
   },
   "dependencies": {
     "@types/multer": "1.4.5",
+    "@types/uniqid": "^5.3.2",
     "aws-sdk": "^2.1145.0",
     "body-parser": "^1.19.0",
     "cors": "^2.8.5",

@@ -8,10 +8,10 @@ import CategoryContentModel from "../../db/models/categoryContentModel";
 
 export default class CategoryHandler {
     public static async addCategory(req: Request, res: Response): Promise<void> {
-        let superSubCategory = Joi.object().keys({
+        const superSubCategory = Joi.object().keys({
             name: Joi.string().required()
         })
-        let subCategory = Joi.object().keys({
+        const subCategory = Joi.object().keys({
             name: Joi.string().required(),
             hasSubCategories: Joi.boolean().required(),
             subCategories: Joi.array().items(superSubCategory),
@@ -41,7 +41,7 @@ export default class CategoryHandler {
     }
 
     public static async getAllCategories(req: Request, res: Response): Promise<void> {
-        let schema = Joi.object().keys({
+        const schema = Joi.object().keys({
             page: Joi.number().required(),
             limit: Joi.number().required(),
             query: Joi.string()
@@ -64,7 +64,7 @@ export default class CategoryHandler {
     }
 
     public static async getSingleCategory(req: Request, res: Response): Promise<void> {
-        let schema = Joi.object().keys({
+        const schema = Joi.object().keys({
             id: Joi.string().required()
         })
         const validation = schema.validate(req.params);
@@ -85,7 +85,7 @@ export default class CategoryHandler {
     }
 
     public static async uploadContent(req: Request, res: Response) {
-        let schema = Joi.object().keys({
+        const schema = Joi.object().keys({
             categoryId: Joi.string(),
             subCategory: Joi.string(),
             superSubCategory: Joi.string(),

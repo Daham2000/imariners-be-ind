@@ -1,8 +1,7 @@
 import Dao from "../dao";
 import {Category} from "../../models/category";
 import DataModel from "../../models/dataModel";
-
-const uniqid = require('uniqid');
+import uniqid from 'uniqid';
 
 export default class CategoryDAO extends Dao {
     async addCategory(category: Category): Promise<any> {
@@ -13,27 +12,27 @@ export default class CategoryDAO extends Dao {
         ${category.hasSubCategories},
         ${category.categoryLearners})
         `);
-        if (category.hasSubCategories == true) {
-            for (let i = 0; i < category.subCategories.length; i++) {
-                category.subCategories[i].subCategoryId = `${uniqid()}`;
+        if (category.hasSubCategories === true) {
+            for (const item of category.subCategories) {
+                item.subCategoryId = `${uniqid()}`;
                 await super.query(`INSERT INTO SubCategories (
         c_id, s_c_id,categoryName,content_links,hasSubCategories) VALUES (
         "${category.categoryId}",
-        "${category.subCategories[i].subCategoryId}",
-        "${category.subCategories[i].name}",
+        "${item.subCategoryId}",
+        "${item.name}",
         '{"links":[]}',
-        "${category.subCategories[i].hasSubCategories}")
+        "${item.hasSubCategories}")
         `);
 
-                if (category.subCategories[i].hasSubCategories == true) {
-                    for (let ii = 0; ii < category.subCategories[i].subCategories.length; ii++) {
+                if (item.hasSubCategories === true) {
+                    for (const item1 of item.subCategories) {
                         {
-                            category.subCategories[i].subCategories[ii].superSubCategoryId = `${uniqid()}`;
+                            item1.superSubCategoryId = `${uniqid()}`;
                             await super.query(`INSERT INTO SuperSubCategories (
                     ss_c_id, s_c_id,categoryName,content_links) VALUES (
-                    "${category.subCategories[i].subCategories[ii].superSubCategoryId}",
-                    "${category.subCategories[i].subCategoryId}",
-                    "${category.subCategories[i].subCategories[ii].name}",
+                    "${item1.superSubCategoryId}",
+                    "${item.subCategoryId}",
+                    "${item1.name}",
                                    '{"links":[]}')
                     `);
                         }
@@ -51,9 +50,9 @@ export default class CategoryDAO extends Dao {
     }
 
     async getAllCategories(dataModel: DataModel): Promise<any> {
-        let skip = (dataModel.page - 1) * dataModel.limit;
-        let limit = skip + ',' + dataModel.limit;
-        if (dataModel.query == undefined) {
+        const skip = (dataModel.page - 1) * dataModel.limit;
+        const limit = skip + ',' + dataModel.limit;
+        if (dataModel.query === undefined) {
             return super.query(`SELECT * from Categories limit ${limit}`);
         }
         return super.query(`SELECT * from Categories Where categoryName LIKE "%${dataModel.query}%" limit ${limit}`);
@@ -69,8 +68,8 @@ export default class CategoryDAO extends Dao {
 
     async updateCategoryLinks(categoryId: string, link: string) {
         const r = await super.query(`SELECT content_links from Categories where c_id="${categoryId}" `);
-        let stringObj = JSON.parse(r[0].content_links);
-        let links = stringObj.links;
+        const stringObj = JSON.parse(r[0].content_links);
+        const links = stringObj.links;
         links.push(link);
         const json = JSON.stringify(links);
         await super.query(`Update Categories SET content_links = '{"links":${json}}' `);
@@ -78,8 +77,8 @@ export default class CategoryDAO extends Dao {
 
     async updateSubCategoryLinks(categoryId: string, link: string) {
         const r = await super.query(`SELECT content_links from SubCategories where s_c_id="${categoryId}" `);
-        let stringObj = JSON.parse(r[0].content_links);
-        let links = stringObj.links;
+        const stringObj = JSON.parse(r[0].content_links);
+        const links = stringObj.links;
         links.push(link);
         const json = JSON.stringify(links);
         await super.query(`Update SubCategories SET content_links = '{"links":${json}}' `);
@@ -87,8 +86,8 @@ export default class CategoryDAO extends Dao {
 
     async updateSuperSubCategoryLinks(categoryId: string, link: string) {
         const r = await super.query(`SELECT content_links from SuperSubCategories where ss_c_id="${categoryId}" `);
-        let stringObj = JSON.parse(r[0].content_links);
-        let links = stringObj.links;
+        const stringObj = JSON.parse(r[0].content_links);
+        const links = stringObj.links;
         links.push(link);
         const json = JSON.stringify(links);
         await super.query(`Update SuperSubCategories SET content_links = '{"links":${json}}' `);

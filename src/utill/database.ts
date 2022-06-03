@@ -1,6 +1,5 @@
 import {Connection} from "mysql";
-
-let mysql = require('mysql');
+import mysql from 'mysql';
 let db: Connection;
 export function init(): void {
     if(!db){
