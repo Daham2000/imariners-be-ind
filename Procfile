@@ -1,4 +1,4 @@
-web: node src/index.ts
+web: nodemon src/index.ts
 
 
 
