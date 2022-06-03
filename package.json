@@ -2,9 +2,11 @@
   "name": "imariners-be-ind",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "nodemon src/index.ts",
+    "start": "node .",
+    "build": "tsc",
+    "prestart": "npm run build",
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "set NODE_ENV=dev&& nodemon src/index.ts"
   },
