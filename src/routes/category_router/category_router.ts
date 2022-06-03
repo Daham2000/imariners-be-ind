@@ -4,6 +4,9 @@ import multer from "multer";
 
 const uploader = multer({ dest: 'uploads/' })
 
+
+
+
 const categoryRouter = Router();
 
 categoryRouter.route("/").post(CategoryHandler.addCategory);
